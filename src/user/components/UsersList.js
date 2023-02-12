@@ -1,5 +1,7 @@
 import React from "react";
 import UserItem from "./UserItem";
+import Avatar from "../../shared/components/UIEelement/Avatar";
+
 import "./UsersList.css";
 
 const UsersList = (props) => {
@@ -12,7 +14,7 @@ const UsersList = (props) => {
   }
 
   return (
-    <ul>
+    <ul className="users-list">
       {props.items.map((user) => {
         return <UserItem key={user.id} id={user.id} image={user.image} name={user.name} placeCount={user.places} />;
       })}
