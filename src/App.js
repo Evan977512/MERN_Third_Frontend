@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Redirect, Switch } from "react-router-d
 
 import Users from "./user/pages/Users";
 import NewPlace from "./places/pages/NewPlace";
+import MainNavigation from "./shared/components/Navigation/MainNavigation";
 
 {
   /**
@@ -14,11 +15,14 @@ const App = () => {
   return (
     <div>
       <Router>
-        <Switch>
-          <Route path="/" component={Users} exact />
-          <Route path="/places/new" component={NewPlace} exact />
-          <Redirect to="/" />
-        </Switch>
+        <MainNavigation />
+        <main>
+          <Switch>
+            <Route path="/" component={Users} exact />
+            <Route path="/places/new" component={NewPlace} exact />
+            <Redirect to="/" />
+          </Switch>
+        </main>
       </Router>
     </div>
   );
