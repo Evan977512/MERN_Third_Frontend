@@ -2,7 +2,6 @@
  * useReducer hook also allows you to manage satae in a component
  * the difference between the useState and useReducer, you can manage more complex state
  */
-
 import React, { useReducer, useEffect } from 'react';
 
 import { validate } from '../../util/validators';
@@ -29,9 +28,9 @@ const inputReducer = (state, action) => {
 
 const Input = (props) => {
     const [inputState, dispatch] = useReducer(inputReducer, {
-        value: props.value || '',
+        value: props.initialValue || '',
         isTouched: false,
-        isValid: props.valid || false,
+        isValid: props.initialValid || false,
     });
 
     const { id, onInput } = props;
