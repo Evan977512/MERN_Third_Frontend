@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import Card from '../../shared/components/UIEelement/Card';
 import Input from '../../shared/components/FormElements/Input';
 import Button from '../../shared/components/FormElements/Button';
-import { VALIDATOR_EMAIL, VALIDATOR_MINLENGTH } from '../../shared/util/validators';
+import { VALIDATOR_EMAIL, VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from '../../shared/util/validators';
 import { useForm } from '../../shared/hooks/form-hook';
 import './Auth.css';
 
 const Auth = (props) => {
-    const [formState, inputHandler] = useForm(
+    const [isLoginMode, setIsLoginMode] = useState(true);
+
+    const [formState, inputHandler, setFormData] = useForm(
         {
             email: {
                 value: '',
@@ -22,6 +24,35 @@ const Auth = (props) => {
         false
     );
 
+    const switchModeHandler = () => {
+        if (!isLoginMode) {
+            setFormData(
+                {
+                    ...formState.inputs,
+                    name: undefined,
+                },
+                formState.inputs.email.isValid && formState.inputs.password.isValid
+            );
+        } else {
+            setFormData(
+                {
+                    ...formState.inputs,
+                    name: {
+                        value: '',
+                        isValid: false,
+                    },
+                },
+                false
+            );
+        }
+        /**
+         * (prevMode) => (!prevMode) == function form of updating the state
+         * which we should use if our new state update is based on the previous state
+         * and it basically inverts it by adding this exclamation makr.
+         */
+        setIsLoginMode((prevMode) => !prevMode);
+    };
+
     const authSubmitHandler = (event) => {
         event.preventDefault();
         console.log(formState.inputs);
@@ -32,6 +63,18 @@ const Auth = (props) => {
             <h2>Login Required</h2>
             <hr />
             <form onSubmit={authSubmitHandler}>
+                {!isLoginMode && (
+                    <Input
+                        element="input"
+                        id="name"
+                        type="text"
+                        label="name"
+                        validators={[VALIDATOR_REQUIRE]}
+                        errorText="Please enter a name"
+                        onInput={inputHandler}
+                    />
+                )}
+
                 <Input
                     element="input"
                     id="email"
@@ -51,9 +94,13 @@ const Auth = (props) => {
                     onInput={inputHandler}
                 />
                 <Button type="submit" disabled={!formState.isValid}>
-                    LOGIN
+                    {isLoginMode ? 'LOGIN' : 'SIGNUP'}
                 </Button>
             </form>
+
+            <Button inverse onClick={switchModeHandler}>
+                SWITCH TO {isLoginMode ? 'SIGNUP' : 'LOGIN'}
+            </Button>
         </Card>
     );
 };
