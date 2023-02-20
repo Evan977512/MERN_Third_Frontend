@@ -26,6 +26,9 @@ const inputReducer = (state, action) => {
     }
 };
 
+/**
+ * returns initial input status
+ */
 const Input = (props) => {
     const [inputState, dispatch] = useReducer(inputReducer, {
         value: props.initialValue || '',
