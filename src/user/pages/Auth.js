@@ -3,6 +3,8 @@ import React, { useState, useContext } from "react";
 import Card from "../../shared/components/UIEelement/Card";
 import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button";
+import ErrorModal from "../../shared/components/UIEelement/ErrorModal";
+import LoadingSpinner from "../../shared/components/UIEelement/LoadingSpinner";
 import { VALIDATOR_EMAIL, VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from "../../shared/util/validators";
 import { useForm } from "../../shared/hooks/form-hook";
 import AuthContext from "../../shared/context/auth-context";
@@ -10,8 +12,9 @@ import "./Auth.css";
 
 const Auth = (props) => {
   const auth = useContext(AuthContext);
-
   const [isLoginMode, setIsLoginMode] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
 
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -63,6 +66,7 @@ const Auth = (props) => {
     if (isLoginMode) {
     } else {
       try {
+        setIsLoading(true);
         // fetch() is a built-in function in JavaScript that allows us to make HTTP requests
         // '' => needs a string that points at backend
         const response = await fetch("http://localhost:5000/api/users/signup", {
@@ -81,15 +85,20 @@ const Auth = (props) => {
         // returns a promise -> we need 'await' for the promise to resolve
         const responseData = await response.json();
         console.log(responseData);
+        setIsLoading(false);
+        auth.login();
       } catch (error) {
         console.log(error);
+        setIsLoading(false);
+        setError(error.message || "Something went wrong, please try again.");
       }
     }
-    auth.login();
   };
 
   return (
     <Card className="authentication">
+      {/**isLoading is true, then show the loading spinner*/}
+      {isLoading && <LoadingSpinner asOverlay />}
       <h2>Login Required</h2>
       <hr />
       <form onSubmit={authSubmitHandler}>
