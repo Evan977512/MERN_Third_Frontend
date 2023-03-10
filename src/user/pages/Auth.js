@@ -56,9 +56,35 @@ const Auth = (props) => {
     setIsLoginMode((prevMode) => !prevMode);
   };
 
-  const authSubmitHandler = (event) => {
+  const authSubmitHandler = async (event) => {
     event.preventDefault();
-    console.log(formState.inputs);
+
+    // check if it is login mode
+    if (isLoginMode) {
+    } else {
+      try {
+        // fetch() is a built-in function in JavaScript that allows us to make HTTP requests
+        // '' => needs a string that points at backend
+        const response = await fetch("http://localhost:5000/api/users/signup", {
+          method: "POST",
+          // HTTP 헤더는 클라이언트와 서버가 요청 또는 응답으로 부가적인 정보를 전송할 수 있도록 해줍니다
+          headers: {
+            "Content-Type": "application/json",
+          },
+          // stringify() 메서드는 배열이나 객체와 같은 JS데이터를 JSON 문자열로 변환합니다.
+          body: JSON.stringify({
+            name: formState.inputs.name.value,
+            email: formState.inputs.email.value,
+            password: formState.inputs.password.value,
+          }),
+        });
+        // returns a promise -> we need 'await' for the promise to resolve
+        const responseData = await response.json();
+        console.log(responseData);
+      } catch (error) {
+        console.log(error);
+      }
+    }
     auth.login();
   };
 
