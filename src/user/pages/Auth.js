@@ -64,12 +64,11 @@ const Auth = (props) => {
 
     // check if it is login mode
     if (isLoginMode) {
-    } else {
       try {
         setIsLoading(true);
         // fetch() is a built-in function in JavaScript that allows us to make HTTP requests
         // '' => needs a string that points at backend
-        const response = await fetch("http://localhost:5000/api/users/signup", {
+        const response = await fetch("http://localhost:5000/api/users/login", {
           method: "POST",
           // HTTP 헤더는 클라이언트와 서버가 요청 또는 응답으로 부가적인 정보를 전송할 수 있도록 해줍니다
           headers: {
@@ -77,7 +76,6 @@ const Auth = (props) => {
           },
           // stringify() 메서드는 배열이나 객체와 같은 JS데이터를 JSON 문자열로 변환합니다.
           body: JSON.stringify({
-            name: formState.inputs.name.value,
             email: formState.inputs.email.value,
             password: formState.inputs.password.value,
           }),
@@ -88,7 +86,30 @@ const Auth = (props) => {
           // 200번대 코드가 아닌 경우 에러를 던집니다.
           throw new Error(responseData.message);
         }
-        console.log(responseData);
+        setIsLoading(false);
+        auth.login();
+      } catch (error) {
+        setIsLoading(false);
+        setError(error.message || "Something went wrong, please try again.");
+      }
+    } else {
+      try {
+        setIsLoading(true);
+        const response = await fetch("http://localhost:5000/api/users/signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: formState.inputs.name.value,
+            email: formState.inputs.email.value,
+            password: formState.inputs.password.value,
+          }),
+        });
+        const responseData = await response.json();
+        if (!response.ok) {
+          throw new Error(responseData.message);
+        }
         setIsLoading(false);
         auth.login();
       } catch (error) {
