@@ -1,10 +1,10 @@
 import React, { useState, useContext } from "react";
 
-import Card from "../../shared/components/UIEelement/Card";
+import Card from "../../shared/components/UIElement/Card";
 import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button";
-import ErrorModal from "../../shared/components/UIEelement/ErrorModal";
-import LoadingSpinner from "../../shared/components/UIEelement/LoadingSpinner";
+import ErrorModal from "../../shared/components/UIElement/ErrorModal";
+import LoadingSpinner from "../../shared/components/UIElement/LoadingSpinner";
 import { VALIDATOR_EMAIL, VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from "../../shared/util/validators";
 import { useForm } from "../../shared/hooks/form-hook";
 import AuthContext from "../../shared/context/auth-context";
@@ -68,7 +68,7 @@ const Auth = (props) => {
         setIsLoading(true);
         // fetch() is a built-in function in JavaScript that allows us to make HTTP requests
         // '' => needs a string that points at backend
-        const response = await fetch("http://localhost:5000/api/users/login", {
+        const response = await fetch(`http://localhost:5001/api/users/login`, {
           method: "POST",
           // HTTP 헤더는 클라이언트와 서버가 요청 또는 응답으로 부가적인 정보를 전송할 수 있도록 해줍니다
           headers: {
@@ -95,7 +95,7 @@ const Auth = (props) => {
     } else {
       try {
         setIsLoading(true);
-        const response = await fetch("http://localhost:5000/api/users/signup", {
+        const response = await fetch(`http://localhost:5001/api/users/signup`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
