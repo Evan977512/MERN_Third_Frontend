@@ -1,9 +1,7 @@
 // 로딩과 오류 상태를 관리하는 훅 == useState
-import { useState } from "react";
 // useCallback is a hook that will return a memoized version of the callback function that only changes if one of the dependencies has changed.
 // to avoid infinite loops
-import { useCallback } from "react";
-import { useRef, useEffect } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 
 export const useHttpClient = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -15,6 +13,7 @@ export const useHttpClient = () => {
     setIsLoading(true);
     const httpAbortCtrl = new AbortController();
     activeHttpRequests.current.push(httpAbortCtrl);
+
     try {
       const response = await fetch(url, {
         method,
@@ -22,6 +21,7 @@ export const useHttpClient = () => {
         headers,
         signal: httpAbortCtrl.signal,
       });
+
       const responseData = await response.json();
 
       // remove the abort controller from the array
@@ -33,10 +33,10 @@ export const useHttpClient = () => {
 
       setIsLoading(false);
       return responseData;
-    } catch (error) {
-      setError(error.message);
+    } catch (err) {
+      setError(err.message);
       setIsLoading(false);
-      throw error;
+      throw err;
     }
   }, []);
 
@@ -46,6 +46,7 @@ export const useHttpClient = () => {
 
   useEffect(() => {
     return () => {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       activeHttpRequests.current.forEach((abortCtrl) => abortCtrl.abort());
     };
   }, []);

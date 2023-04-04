@@ -1,10 +1,11 @@
 import React, { useContext } from "react";
 import { useHistory } from "react-router-dom";
+
 import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button";
-import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from "../../shared/util/validators";
 import ErrorModal from "../../shared/components/UIElement/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElement/LoadingSpinner";
+import { VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH } from "../../shared/util/validators";
 import { useForm } from "../../shared/hooks/form-hook";
 import { useHttpClient } from "../../shared/hooks/http-hook";
 import AuthContext from "../../shared/context/auth-context";
@@ -13,7 +14,6 @@ import "./PlaceForm.css";
 const NewPlace = () => {
   const auth = useContext(AuthContext);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
-
   const [formState, inputHandler] = useForm(
     {
       title: {
@@ -31,6 +31,7 @@ const NewPlace = () => {
     },
     false
   );
+
   const history = useHistory();
 
   const placeSubmitHandler = async (event) => {
@@ -48,7 +49,7 @@ const NewPlace = () => {
         { "Content-Type": "application/json" }
       );
       history.push("/");
-    } catch (error) {}
+    } catch (err) {}
   };
 
   return (
@@ -76,7 +77,7 @@ const NewPlace = () => {
         <Input
           id="address"
           element="input"
-          label="address"
+          label="Address"
           validators={[VALIDATOR_REQUIRE()]}
           errorText="Please enter a valid address."
           onInput={inputHandler}
