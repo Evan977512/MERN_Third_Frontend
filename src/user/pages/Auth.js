@@ -1,17 +1,22 @@
+/**
+ * (prevMode) => (!prevMode) == function form of updating the state
+ * which we should use if our new state update is based on the previous state
+ * and it basically inverts it by adding this exclamation makr.
+ */
 import React, { useState, useContext } from "react";
 
-import Card from "../../shared/components/UIElement/Card";
+import Card from "../../shared/components/UIElements/Card";
 import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button";
-import ErrorModal from "../../shared/components/UIElement/ErrorModal";
-import LoadingSpinner from "../../shared/components/UIElement/LoadingSpinner";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal";
+import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import { VALIDATOR_EMAIL, VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from "../../shared/util/validators";
 import { useForm } from "../../shared/hooks/form-hook";
-import AuthContext from "../../shared/context/auth-context";
 import { useHttpClient } from "../../shared/hooks/http-hook";
+import { AuthContext } from "../../shared/context/auth-context";
 import "./Auth.css";
 
-const Auth = (props) => {
+const Auth = () => {
   const auth = useContext(AuthContext);
   const [isLoginMode, setIsLoginMode] = useState(true);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
@@ -51,11 +56,6 @@ const Auth = (props) => {
         false
       );
     }
-    /**
-     * (prevMode) => (!prevMode) == function form of updating the state
-     * which we should use if our new state update is based on the previous state
-     * and it basically inverts it by adding this exclamation makr.
-     */
     setIsLoginMode((prevMode) => !prevMode);
   };
 
@@ -79,11 +79,11 @@ const Auth = (props) => {
           }
         );
         auth.login(responseData.user.id);
-      } catch (error) {}
+      } catch (err) {}
     } else {
       try {
         const responseData = await sendRequest(
-          `http://localhost:5001/api/users/signup`,
+          "http://localhost:5001/api/users/signup",
           "POST",
           JSON.stringify({
             name: formState.inputs.name.value,
@@ -96,7 +96,7 @@ const Auth = (props) => {
         );
 
         auth.login(responseData.user.id);
-      } catch (error) {}
+      } catch (err) {}
     }
   };
 
@@ -104,7 +104,6 @@ const Auth = (props) => {
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />
       <Card className="authentication">
-        {/**isLoading is true, then show the loading spinner*/}
         {isLoading && <LoadingSpinner asOverlay />}
         <h2>Login Required</h2>
         <hr />
@@ -114,20 +113,19 @@ const Auth = (props) => {
               element="input"
               id="name"
               type="text"
-              label="name"
-              validators={[VALIDATOR_REQUIRE]}
-              errorText="Please enter a name"
+              label="Your Name"
+              validators={[VALIDATOR_REQUIRE()]}
+              errorText="Please enter a name."
               onInput={inputHandler}
             />
           )}
-
           <Input
             element="input"
             id="email"
             type="email"
-            label="E-mail"
+            label="E-Mail"
             validators={[VALIDATOR_EMAIL()]}
-            errorText="Please enter a valid email address"
+            errorText="Please enter a valid email address."
             onInput={inputHandler}
           />
           <Input
@@ -136,14 +134,13 @@ const Auth = (props) => {
             type="password"
             label="Password"
             validators={[VALIDATOR_MINLENGTH(5)]}
-            errorText="Please enter a valid password at least 5 chatracters"
+            errorText="Please enter a valid password, at least 5 characters."
             onInput={inputHandler}
           />
           <Button type="submit" disabled={!formState.isValid}>
             {isLoginMode ? "LOGIN" : "SIGNUP"}
           </Button>
         </form>
-
         <Button inverse onClick={switchModeHandler}>
           SWITCH TO {isLoginMode ? "SIGNUP" : "LOGIN"}
         </Button>

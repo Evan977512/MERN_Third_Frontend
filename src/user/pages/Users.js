@@ -1,23 +1,21 @@
 import React, { useEffect, useState } from "react";
 
-import ErrorModal from "../../shared/components/UIElement/ErrorModal";
-import LoadingSpinner from "../../shared/components/UIElement/LoadingSpinner";
 import UsersList from "../components/UsersList";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal";
+import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import { useHttpClient } from "../../shared/hooks/http-hook";
-// https://w0.peakpx.com/wallpaper/285/684/HD-wallpaper-fat-yoshi.jpg
-const img = "../../img/fat_yoshi.jpeg";
 
 const Users = () => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
-  const [loadedUsers, setLoadedUsers] = useState(false);
+  const [loadedUsers, setLoadedUsers] = useState();
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const responseData = await sendRequest(`http://localhost:5001/api/users`);
+        const responseData = await sendRequest("http://localhost:5001/api/users");
 
         setLoadedUsers(responseData.users);
-      } catch (error) {}
+      } catch (err) {}
     };
     fetchUsers();
   }, [sendRequest]);

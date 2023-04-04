@@ -1,5 +1,4 @@
 import { useCallback, useReducer } from "react";
-
 /**
  * quite complex...but it should ensure that we update the information
  * about the inputs and the overall form validity.
@@ -29,17 +28,17 @@ const formReducer = (state, action) => {
     case "SET_DATA":
       return {
         inputs: action.inputs,
-        isValid: action.formIsvalid,
+        isValid: action.formIsValid,
       };
     default:
       return state;
   }
 };
 
-export const useForm = (innitialInputs, innitialFormValidity) => {
+export const useForm = (initialInputs, initialFormValidity) => {
   const [formState, dispatch] = useReducer(formReducer, {
-    inputs: innitialInputs,
-    isValid: innitialFormValidity,
+    inputs: initialInputs,
+    isValid: initialFormValidity,
   });
 
   const inputHandler = useCallback((id, value, isValid) => {

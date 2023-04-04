@@ -18,6 +18,7 @@ const SideDrawer = (props) => {
       </aside>
     </CSSTransition>
   );
+
   return ReactDOM.createPortal(content, document.getElementById("drawer-hook"));
 };
 
