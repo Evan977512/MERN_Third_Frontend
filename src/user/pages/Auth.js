@@ -67,7 +67,7 @@ const Auth = (props) => {
       // fetch() is a built-in function in JavaScript that allows us to make HTTP requests
       // '' => needs a string that points at backend
       try {
-        await sendRequest(
+        const responseData = await sendRequest(
           "http://localhost:5001/api/users/login",
           "POST",
           JSON.stringify({
@@ -78,11 +78,11 @@ const Auth = (props) => {
             "Content-Type": "application/json",
           }
         );
-        auth.login();
+        auth.login(responseData.user.id);
       } catch (error) {}
     } else {
       try {
-        await sendRequest(
+        const responseData = await sendRequest(
           `http://localhost:5001/api/users/signup`,
           "POST",
           JSON.stringify({
@@ -95,7 +95,7 @@ const Auth = (props) => {
           }
         );
 
-        auth.login();
+        auth.login(responseData.user.id);
       } catch (error) {}
     }
   };
