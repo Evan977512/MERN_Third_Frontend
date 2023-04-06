@@ -10,7 +10,7 @@ import { useHttpClient } from "../../shared/hooks/http-hook";
  * @returns user places
  */
 const UserPlaces = () => {
-  const [loadedPlaces, setLoadedPlaces] = useState();
+  const [loadedPlace, setLoadedPlace] = useState();
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   /**
    * useParams & filter allows to filter user id and show corresponding places
@@ -21,7 +21,7 @@ const UserPlaces = () => {
     const fetchPlaces = async () => {
       try {
         const responseData = await sendRequest(`http://localhost:5001/api/places/user/${userId}`);
-        setLoadedPlaces(responseData.places);
+        setLoadedPlace(responseData.places);
       } catch (error) {}
     };
     fetchPlaces();
@@ -35,7 +35,7 @@ const UserPlaces = () => {
           <LoadingSpinner />
         </div>
       )}
-      {!isLoading && loadedPlaces && <PlaceList items={loadedPlaces} />}
+      {!isLoading && loadedPlace && <PlaceList items={loadedPlace} />}
     </React.Fragment>
   );
 };
