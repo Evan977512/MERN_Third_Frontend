@@ -42,6 +42,7 @@ const Auth = () => {
         {
           ...formState.inputs,
           name: undefined,
+          image: undefined,
         },
         formState.inputs.email.isValid && formState.inputs.password.isValid
       );
@@ -51,6 +52,10 @@ const Auth = () => {
           ...formState.inputs,
           name: {
             value: "",
+            isValid: false,
+          },
+          image: {
+            value: null,
             isValid: false,
           },
         },
@@ -63,10 +68,9 @@ const Auth = () => {
   const authSubmitHandler = async (event) => {
     event.preventDefault();
 
-    // check if it is login mode
+    console.log(formState.inputs);
+
     if (isLoginMode) {
-      // fetch() is a built-in function in JavaScript that allows us to make HTTP requests
-      // '' => needs a string that points at backend
       try {
         const responseData = await sendRequest(
           "http://localhost:5001/api/users/login",
@@ -120,7 +124,7 @@ const Auth = () => {
               onInput={inputHandler}
             />
           )}
-          {!isLoginMode && <ImageUpload center id="image" />}
+          {!isLoginMode && <ImageUpload center id="image" onInput={inputHandler} />}
           <Input
             element="input"
             id="email"
