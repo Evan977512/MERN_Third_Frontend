@@ -85,7 +85,7 @@ const Auth = () => {
       } catch (err) {}
     } else {
       try {
-        console.log("HELLO~~~");
+        // console.log("HELLO~~~");
         const formData = new FormData();
         formData.append("email", formState.inputs.email.value);
         formData.append("name", formState.inputs.name.value);
