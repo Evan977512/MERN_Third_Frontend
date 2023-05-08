@@ -13,23 +13,30 @@ const App = () => {
   const [token, setToken] = useState(false);
   const [userId, setUserId] = useState(false);
 
-  const login = useCallback((uid, token) => {
+  const login = useCallback((uid, token, expirationDate) => {
     setToken(token);
     setUserId(uid);
+    // token expires in 1 hour
+    const tokenExpirationDate = expirationDate || new Date(new Date().getTime() + 1000 * 60 * 60); // 1 hour
+
     // save token to local storage
-    localStorage.setItem("userData", JSON.stringify({ userId: uid, token: token }));
+    localStorage.setItem(
+      "userData",
+      JSON.stringify({ userId: uid, token: token, expiration: tokenExpirationDate.toISOString() })
+    );
   }, []);
 
   useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem("userData"));
-    if (storedData && storedData.token) {
-      login(storedData.userId, storedData.token);
+    if (storedData && storedData.token && new Date(storedData.expiration) > new Date()) {
+      login(storedData.userId, storedData.token, new Date(storedData.expiration));
     }
   }, [login]); // runs once (on mount)
 
   const logout = useCallback(() => {
     setToken(null);
     setUserId(null);
+    localStorage.removeItem("userData");
   }, []);
 
   let routes;
