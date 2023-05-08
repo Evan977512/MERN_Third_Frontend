@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { BrowserRouter as Router, Route, Redirect, Switch } from "react-router-dom";
 
 import Users from "./user/pages/Users";
@@ -16,7 +16,16 @@ const App = () => {
   const login = useCallback((uid, token) => {
     setToken(token);
     setUserId(uid);
+    // save token to local storage
+    localStorage.setItem("userData", JSON.stringify({ userId: uid, token: token }));
   }, []);
+
+  useEffect(() => {
+    const storedData = JSON.parse(localStorage.getItem("userData"));
+    if (storedData && storedData.token) {
+      login(storedData.userId, storedData.token);
+    }
+  }, [login]); // runs once (on mount)
 
   const logout = useCallback(() => {
     setToken(null);
